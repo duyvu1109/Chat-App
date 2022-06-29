@@ -1,0 +1,46 @@
+version: '3'
+services:
+  mysqldb:
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: chatapp
+      MYSQL_ROOT_PASSWORD: duyvu1109
+    container_name: mysqldb
+    volumes:
+      - golang-docker-data:/var/lib/mysql
+    networks:
+      - goals-net
+    security_opt:
+      - seccomp:unconfined
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - .:/golang-docker
+    depends_on:
+      - mysqldb
+    links:
+      - mysqldb
+    container_name: chatapp_server
+    networks:
+      - goals-net
+
+  client:
+    build:
+      context: .
+      dockerfile: ./client/Dockerfile
+    ports:
+      - 3000:3000
+    container_name: chatapp_client
+    # networks:
+    #   - goals-net
+    depends_on:
+      - server
+volumes:
+  golang-docker-data:
+networks:
+  goals-net:
+    driver: bridge

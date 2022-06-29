@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option go_package = "gitlab.com/vund5/chatapp/api";
+
+package api;
+
+// message Message { 
+//     string client = 1;      // Name of User
+//     string msg = 2;       // Message Content
+//     string room = 3;      // Sending Time 
+// }
+
+
+message Message {
+    oneof payload {
+        CreateRoomRequest create_room_request = 1;
+        CreateRoomReply create_room_reply = 2;
+        ChatRequest chat_request = 3;
+        ChatReply chat_reply = 4;
+    }
+}
+
+message CreateRoomRequest {
+    string room = 1;
+    string user = 2;
+}
+
+message CreateRoomReply {
+    string room = 1;
+    bool created = 2;
+}
+
+message ChatRequest {
+    string msg = 1;
+    string user = 2;
+    string room = 3;
+}
+
+message ChatReply {
+    string msg = 1;
+    string user = 2;
+    string room = 3;
+}
+
